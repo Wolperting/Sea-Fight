@@ -1,0 +1,28 @@
+
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel='stylesheet' href='webjars/bootstrap/3.2.0/css/bootstrap.min.css'>
+    <link rel="stylesheet" th:href="@{/resources/style.css}">
+    <title>Error</title>
+</head>
+
+
+<body>
+<div class="jumbotron">
+    <h1>Ошибка!</h1>
+    <p>Неправильный логин или пароль</p>
+    <p><a th:href="@{/login}" class="btn btn-primary btn-lg" role="button" >Повторить ввод</a></p>
+</div>
+
+
+<!  - Всегда окончание     >
+<script type="text/javascript" src="webjars/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!  - конец окончания     >
+</body>
+</html>
