@@ -1,6 +1,7 @@
 package wolper.controller;
 
 import java.io.IOException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import javax.validation.Valid;
@@ -26,6 +27,9 @@ import wolper.logic.*;
 
 		@Autowired
 		CrossGamerInfoBuss crossGamerInfoBuss;
+
+		@Autowired
+		SessionServise sesserv;
 
 		SimpMessageSendingOperations messaging;
 
@@ -61,10 +65,21 @@ import wolper.logic.*;
 			return new ModelAndView("reg_error");
 		}
 
-		//Контроллер регистрации - имя же есть в базе - ошибка
-		@RequestMapping(value = "/double_reg")
-		public ModelAndView double_reg(HttpServletResponse response, Model model) throws IOException {
-			return new ModelAndView("double_reg");
+		//Контроллер регистрации - попытка залогиниться дважды при открытой сессии в другом окне
+		@RequestMapping(value = "/double_reg/{name}")
+		public ModelAndView double_reg_confirm(@PathVariable("name") String name) throws IOException {
+			ModelAndView modelAndView = new ModelAndView("double_reg");
+			modelAndView.addObject("name", name);
+			return modelAndView;
+		}
+
+		//Контроллер регистрации - логринимся занова а прошлы сессии надежно убиваем
+		@RequestMapping(value = "/double_reg_final/{name}")
+			public ModelAndView double_reg_decided(@PathVariable("name") String name, ServletRequest request) throws IOException {
+			sesserv.expireAndKillUserSessions(name, request.getLocalPort());
+			//TODO передалать на POST - так будет безопаснее.
+			// Злой польщователь не сможет указав логин в URL завалить другого пользователя
+			return new ModelAndView("redirect:/home");
 		}
 
 		//Контроллер регистрации нового игрока
@@ -88,13 +103,11 @@ import wolper.logic.*;
 			return new ModelAndView("successreg");
 		}
 
-
 		//Контроллер регистрации нового игрока
 		@RequestMapping(value = "/register", method = RequestMethod.POST)
 		public ModelAndView getregistered(@ModelAttribute("gamer") @Valid Gamer gamer,
 										  BindingResult result,
-										  @RequestParam("password2") String password2
-		) throws IOException {
+										  @RequestParam("password2") String password2)  {
 
 			//Валидация формы
 			if (result.hasErrors()) return new ModelAndView("register");
@@ -125,8 +138,9 @@ import wolper.logic.*;
 			//Todo!!! Сделать полноценный обмен сообщениями между игроками
 		}
 
-
 	}
+
+
 
 
 	//Обработка исключений с выводом сообщений в виде веб-страниц

@@ -53,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/login", "/register", "/resources/**", "/resources/webjars/**", "/webjars/**", "/",
-                        "/home", "/test", "/successreg", "/missedpasword", "/regerror").permitAll()
+                        "/home", "/double_reg_final/**", "/double_reg/**", "/test", "/successreg", "/missedpasword", "/regerror").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()

@@ -68,9 +68,10 @@ public class AllGames {
 
 
     public void deleteGamerByName(String name){
-        gamerDAO.setRatingOnExit(name, listOfGamer.get(name).getRating());
-        listOfGamer.remove(name);
-        //listOfGames.remove(name);
+	final GamerSet deleted = listOfGamer.remove(name);
+	//не допускаем уделения игрока дважде, что может произойти, если игрок пытался открыть несколько сессий (система выбивает такого дублера)
+	if (deleted==null) return; 
+	gamerDAO.setRatingOnExit(name, deleted.getRating());
         listOfShips.remove(name);
         messaging.convertAndSend("/topic/renewList", "reMoved");
     }
